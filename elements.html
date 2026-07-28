@@ -1,0 +1,3393 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BOSSx │ Periodic Table</title>
+    <link rel="icon" type="image/png" href="img/chemistry-project-logo.png" />
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #303030;
+        text-align: center;
+        color: white;
+      }
+
+      .intro-box {
+        user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        display: inline-block;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px;
+        background-color: #303030;
+        border: 3px solid #378049;
+        max-width: 600px;
+        width: 90%;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 24px;
+        margin: 0 0 10px 0;
+      }
+
+      p {
+        font-size: 16px;
+        margin: 0;
+      }
+
+      .hexagon-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-wrap: wrap;
+        overflow: hidden;
+        z-index: -1;
+      }
+
+      .hexagon {
+        width: 100px;
+        height: 57.74px;
+        background-color: rgba(0, 255, 13, 0.103);
+        clip-path: polygon(
+          25% 0%,
+          75% 0%,
+          100% 50%,
+          75% 100%,
+          25% 100%,
+          0% 50%
+        );
+        margin: 2px;
+        animation: float 10s ease-in-out infinite alternate;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(-30px);
+        }
+        100% {
+          transform: translateY(30px);
+        }
+      }
+
+      .hexagon:nth-child(even) {
+        animation-duration: 8s;
+        animation-direction: alternate-reverse;
+      }
+
+      .hexagon:nth-child(3n) {
+        animation-duration: 12s;
+      }
+
+      .periodic-table {
+        display: grid;
+        grid-template-columns: repeat(18, 59px);
+        column-gap: 20px;
+        row-gap: 5px;
+        justify-content: center;
+        padding: 3px;
+        position: relative;
+        z-index: 1;
+        left: 95px;
+      }
+
+      button.element {
+        user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        width: 80px;
+        height: 80px;
+        color: white;
+        font-weight: bold;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        border-radius: 5px;
+        transition:
+          background-color 0.3s ease,
+          border-color 0.3s ease,
+          transform 0.3s ease;
+        font-size: 12px;
+        text-align: center;
+        border: 2px solid transparent;
+        z-index: 1;
+        padding: 20px;
+      }
+
+      .element-type-box {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #303030;
+        border: 3px solid #378049;
+        max-width: 200px;
+        text-align: left;
+        color: #ffffff;
+      }
+
+      .element-type-box h2 {
+        font-size: 18px;
+        margin: 0 0 10px 0;
+      }
+
+      .element-type-label {
+        display: flex;
+        align-items: center;
+        margin: 5px 0;
+        font-size: 14px;
+        cursor: pointer;
+        margin-bottom: 5px;
+      }
+
+      .label-color {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      button.alkali-metal {
+        border-color: #ff0000;
+        background-color: #2b2b2b;
+      }
+
+      button.alkaline-earth-metal {
+        border-color: #ff8800;
+        background-color: #2b2b2b;
+      }
+
+      button.transition-metal {
+        border-color: #ffd900;
+        background-color: #2b2b2b;
+      }
+
+      button.post-transition-metal {
+        border-color: #91ff00;
+        background-color: #2b2b2b;
+      }
+
+      button.metalloid {
+        border-color: #00ffea;
+        background-color: #2b2b2b;
+      }
+
+      button.nonmetal {
+        border-color: #0059ff;
+        background-color: #2b2b2b;
+      }
+
+      button.halogen {
+        border-color: #cc00ff;
+        background-color: #2b2b2b;
+      }
+
+      button.noble-gas {
+        border-color: #9900ff;
+        background-color: #2b2b2b;
+      }
+
+      button.lanthanide {
+        border-color: #ffffff;
+        background-color: #2b2b2b;
+      }
+
+      button.actinide {
+        border-color: #8a8a8a;
+        background-color: #2b2b2b;
+      }
+
+      button.alkali-metal:hover {
+        background-color: #ff0000;
+      }
+
+      button.alkaline-earth-metal:hover {
+        background-color: #ff8800;
+      }
+
+      button.transition-metal:hover {
+        background-color: #ffd900;
+      }
+
+      button.post-transition-metal:hover {
+        background-color: #91ff00;
+      }
+
+      button.metalloid:hover {
+        background-color: #00ffea;
+      }
+
+      button.nonmetal:hover {
+        background-color: #0059ff;
+      }
+
+      button.halogen:hover {
+        background-color: #cc00ff;
+      }
+
+      button.noble-gas:hover {
+        background-color: #9900ff;
+      }
+
+      button.lanthanide:hover {
+        background-color: #ffffff;
+      }
+
+      button.actinide:hover {
+        background-color: #8a8a8a;
+      }
+
+      .element:hover {
+        color: #000000;
+        transform: scale(1.2);
+        z-index: 10;
+      }
+
+      .element-number {
+        font-size: 10px;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+      }
+
+      .element-symbol {
+        font-size: 18px;
+      }
+
+      .element-mass {
+        font-size: 10px;
+        margin-top: 4px;
+      }
+
+      .element-name {
+        font-size: 10px;
+        margin-top: 2px;
+      }
+
+      .element .tooltip {
+        visibility: hidden;
+        width: 120px;
+        color: #000000;
+        text-align: center;
+        border-radius: 5px;
+        padding: 5px;
+        position: absolute;
+        bottom: 90px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+        opacity: 0;
+        transition:
+          opacity 0.3s,
+          background-color 0.3s;
+      }
+
+      .element:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .alkali-metal:hover .tooltip {
+        background-color: #ff0000;
+        color: #000000;
+      }
+
+      .alkaline-earth-metal:hover .tooltip {
+        background-color: #ff8800;
+        color: #000000;
+      }
+
+      .transition-metal:hover .tooltip {
+        background-color: #ffd900;
+        color: #000000;
+      }
+
+      .post-transition-metal:hover .tooltip {
+        background-color: #91ff00;
+        color: #000000;
+      }
+
+      .metalloid:hover .tooltip {
+        background-color: #00ffea;
+        color: #000000;
+      }
+
+      .nonmetal:hover .tooltip {
+        background-color: #0059ff;
+        color: #000000;
+      }
+
+      .halogen:hover .tooltip {
+        background-color: #cc00ff;
+        color: #000000;
+      }
+
+      .noble-gas:hover .tooltip {
+        background-color: #9900ff;
+        color: #000000;
+      }
+
+      .lanthanide:hover .tooltip {
+        background-color: #ffffff;
+        color: #000000;
+      }
+
+      .actinide:hover .tooltip {
+        background-color: #8a8a8a;
+        color: #000000;
+      }
+
+      .footer {
+        display: inline-block;
+        padding: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        background-color: #303030;
+        border: 3px solid #378049;
+        max-width: 600px;
+        width: 90%;
+        text-align: center;
+        color: #ffffff;
+        font-size: 14px;
+        font-family: Arial, sans-serif;
+      }
+
+      .footer-content p {
+        margin: 5px 0;
+      }
+
+      .footer a {
+        color: #1eff00;
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+
+      .popup-box {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 450px;
+        padding: 20px;
+        background-color: white;
+        border: 2px solid black;
+        color: #000000;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+
+      .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+
+      .popup-content p {
+        margin: 10px 0;
+        line-height: 1.5;
+      }
+
+      .close-btn {
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Popup Overlay -->
+    <div id="popupOverlay" class="popup-overlay" onclick="closePopup()"></div>
+
+    <!-- Popup Box -->
+    <div id="popupBox" class="popup-box">
+      <div class="popup-content">
+        <h2 id="popupTitle"></h2>
+        <p><strong>Atomic Number:</strong> <span id="popupNumber"></span></p>
+        <p><strong>Symbol:</strong> <span id="popupSymbol"></span></p>
+        <p><strong>Atomic Mass:</strong> <span id="popupMass"></span></p>
+        <p><strong>Type:</strong> <span id="popupType"></span></p>
+        <p><strong>State:</strong> <span id="popupState"></span></p>
+        <p><strong>Uses:</strong> <span id="popupUses"></span></p>
+      </div>
+      <button class="close-btn" onclick="closePopup()">X</button>
+    </div>
+
+    <script>
+      function elementInformation(
+        name,
+        number,
+        symbol,
+        mass,
+        type,
+        state,
+        uses,
+      ) {
+        // Populate popup with the provided data
+        document.getElementById("popupTitle").innerText = name;
+        document.getElementById("popupNumber").innerText = number;
+        document.getElementById("popupSymbol").innerText = symbol;
+        document.getElementById("popupMass").innerText = mass;
+        document.getElementById("popupType").innerText = type;
+        document.getElementById("popupState").innerText = state;
+        document.getElementById("popupUses").innerText = uses;
+
+        // Display the popup and overlay
+        document.getElementById("popupBox").style.display = "block";
+        document.getElementById("popupOverlay").style.display = "block";
+
+        // Dynamically set background color based on type
+        let popupBox = document.getElementById("popupBox");
+        if (type.toLowerCase() === "nonmetal") {
+          popupBox.style.backgroundColor = "#0059ff";
+        } else if (type.toLowerCase() === "noble gas") {
+          popupBox.style.backgroundColor = "#9900ff";
+        } else if (type.toLowerCase() === "metalloid") {
+          popupBox.style.backgroundColor = "#00ffea";
+        } else if (type.toLowerCase() === "alkali metal") {
+          popupBox.style.backgroundColor = "#ff0000";
+        } else if (type.toLowerCase() === "alkaline earth metal") {
+          popupBox.style.backgroundColor = "#ff8800";
+        } else if (type.toLowerCase() === "post-transition metal") {
+          popupBox.style.backgroundColor = "#91ff00";
+        } else if (type.toLowerCase() === "nonmetal") {
+          popupBox.style.backgroundColor = "#0059ff";
+        } else if (type.toLowerCase() === "halogen") {
+          popupBox.style.backgroundColor = "#cc00ff";
+        } else if (type.toLowerCase() === "lanthanide") {
+          popupBox.style.backgroundColor = "#ffffff";
+        } else if (type.toLowerCase() === "actinide") {
+          popupBox.style.backgroundColor = "#8a8a8a";
+        } else if (type.toLowerCase() === "transition metal") {
+          popupBox.style.backgroundColor = "#ffd900";
+        } else {
+          popupBox.style.backgroundColor = "white"; // Default color
+        }
+      }
+
+      function closePopup() {
+        // Hide the popup and overlay
+        document.getElementById("popupBox").style.display = "none";
+        document.getElementById("popupOverlay").style.display = "none";
+      }
+    </script>
+    <div class="hexagon-bg">
+      <script>
+        // hexagon background
+        const hexagonContainer = document.querySelector(".hexagon-bg");
+        const hexagonWidth = 100;
+        const hexagonHeight = 57.74;
+        const hexagonsPerRow = Math.ceil(
+          window.innerWidth / (hexagonWidth + 4),
+        );
+        const hexagonRows = Math.ceil(window.innerHeight / (hexagonHeight + 4));
+        for (let i = 0; i < hexagonsPerRow * hexagonRows; i++) {
+          const hexagon = document.createElement("div");
+          hexagon.classList.add("hexagon");
+          hexagonContainer.appendChild(hexagon);
+        }
+      </script>
+    </div>
+    <div class="intro-box">
+      <h1>PERIODIC TABLE OF ELEMENTS</h1>
+      <p>
+        This table was previously created as an assignment in a chemistry class
+        and is now able to be used by the public. Click any element for some
+        basic information. Hover over an element to see common uses for the
+        selected element.<br /><br />
+      </p>
+      <p style="color: red">
+        If the periodic table is not fully visible, try zooming in/out by using
+        CTRL +/-
+      </p>
+    </div>
+
+    <div class="element-type-box">
+      <h2>Element Types</h2>
+      <div class="element-type-label" data-category="alkali-metal">
+        <span class="label-color" style="background-color: #ff0000"></span>
+        Alkali Metal
+      </div>
+      <div class="element-type-label" data-category="alkaline-earth-metal">
+        <span class="label-color" style="background-color: #ff8800"></span>
+        Alkaline Earth Metal
+      </div>
+      <div class="element-type-label" data-category="transition-metal">
+        <span class="label-color" style="background-color: #ffd900"></span>
+        Transition Metal
+      </div>
+      <div class="element-type-label" data-category="post-transition-metal">
+        <span class="label-color" style="background-color: #91ff00"></span>
+        Post-Transition Metal
+      </div>
+      <div class="element-type-label" data-category="metalloid">
+        <span class="label-color" style="background-color: #00ffea"></span>
+        Metalloid
+      </div>
+      <div class="element-type-label" data-category="nonmetal">
+        <span class="label-color" style="background-color: #0059ff"></span>
+        Nonmetal
+      </div>
+      <div class="element-type-label" data-category="halogen">
+        <span class="label-color" style="background-color: #cc00ff"></span>
+        Halogen
+      </div>
+      <div class="element-type-label" data-category="noble-gas">
+        <span class="label-color" style="background-color: #9900ff"></span>
+        Noble Gas
+      </div>
+      <div class="element-type-label" data-category="lanthanide">
+        <span class="label-color" style="background-color: #ffffff"></span>
+        Lanthanide
+      </div>
+      <div class="element-type-label" data-category="actinide">
+        <span class="label-color" style="background-color: #8a8a8a"></span>
+        Actinide
+      </div>
+    </div>
+
+    <div class="periodic-table">
+      <!-- First row -->
+      <button
+        class="element nonmetal"
+        style="grid-column: 1"
+        onclick="
+          elementInformation(
+            'Hydrogen',
+            1,
+            'H',
+            1.008,
+            'Nonmetal',
+            'Colorless, odorless gas',
+            'Highly flammable, used in rocket fuel and fuel cells.',
+          )
+        "
+      >
+        <div class="element-number">1</div>
+        <div class="element-symbol">H</div>
+        <div class="element-name">Hydrogen</div>
+        <div class="element-mass">1.008</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Rocket Fuel<br />Fuel Cells<br />Petroleum
+          Refining
+        </div>
+      </button>
+      <button
+        class="element noble-gas"
+        style="grid-column: 18"
+        onclick="
+          elementInformation(
+            'Helium',
+            2,
+            'He',
+            4.0026,
+            'Noble Gas',
+            'Colorless, odorless gas',
+            'Used in balloons, MRI scanners, and cryogenics.',
+          )
+        "
+      >
+        <div class="element-number">2</div>
+        <div class="element-symbol">He</div>
+        <div class="element-name">Helium</div>
+        <div class="element-mass">4.0026</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Balloons<br />MRI Scanners<br />Cyrogenics
+        </div>
+      </button>
+
+      <!-- Second row -->
+      <button
+        class="element alkali-metal"
+        style="grid-column: 1"
+        onclick="
+          elementInformation(
+            'Lithium',
+            3,
+            'Li',
+            6.94,
+            'Alkali Metal',
+            'Soft, silvery metal',
+            'Used in batteries, medication, and hydrogen storage.',
+          )
+        "
+      >
+        <div class="element-number">3</div>
+        <div class="element-symbol">Li</div>
+        <div class="element-name">Lithium</div>
+        <div class="element-mass">6.94</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Batteries<br />Medication<br />Hydrogen
+          Storage
+        </div>
+      </button>
+      <button
+        class="element alkaline-earth-metal"
+        style="grid-column: 2"
+        onclick="
+          elementInformation(
+            'Beryllium',
+            4,
+            'Be',
+            9.0122,
+            'Alkaline Earth Metal',
+            'Hard, brittle metal',
+            'Used in aircraft components, X-ray windows, and computer parts.',
+          )
+        "
+      >
+        <div class="element-number">4</div>
+        <div class="element-symbol">Be</div>
+        <div class="element-name">Beryllium</div>
+        <div class="element-mass">9.0122</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Computer Parts<br />Aircraft Components<br />X-ray
+          Windows
+        </div>
+      </button>
+      <button
+        class="element metalloid"
+        style="grid-column: 13"
+        onclick="
+          elementInformation(
+            'Boron',
+            5,
+            'B',
+            10.81,
+            'Metalloid',
+            'Black, brittle solid',
+            'Used in detergents, Pyrex glass, and laundry boosters.',
+          )
+        "
+      >
+        <div class="element-number">5</div>
+        <div class="element-symbol">B</div>
+        <div class="element-name">Boron</div>
+        <div class="element-mass">10.81</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Laundry Boosters<br />Detergents<br />Pyrex
+          Glass
+        </div>
+      </button>
+      <button
+        class="element nonmetal"
+        style="grid-column: 14"
+        onclick="
+          elementInformation(
+            'Carbon',
+            6,
+            'C',
+            12.011,
+            'Nonmetal',
+            'Black solid or gas',
+            'Used in soda, plastic, and air filters.',
+          )
+        "
+      >
+        <div class="element-number">6</div>
+        <div class="element-symbol">C</div>
+        <div class="element-name">Carbon</div>
+        <div class="element-mass">12.011</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Soda<br />Plastic<br />Air Filters
+        </div>
+      </button>
+      <button
+        class="element nonmetal"
+        style="grid-column: 15"
+        onclick="
+          elementInformation(
+            'Nitrogen',
+            7,
+            'N',
+            14.007,
+            'Nonmetal',
+            'Colorless, odorless gas',
+            'Used in fertilizer, breathing air, and inflating tires.',
+          )
+        "
+      >
+        <div class="element-number">7</div>
+        <div class="element-symbol">N</div>
+        <div class="element-name">Nitrogen</div>
+        <div class="element-mass">14.007</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Fertilizer<br />Breathing Air<br />Inflating
+          Tires
+        </div>
+      </button>
+      <button
+        class="element nonmetal"
+        style="grid-column: 16"
+        onclick="
+          elementInformation(
+            'Oxygen',
+            8,
+            'O',
+            15.999,
+            'Nonmetal',
+            'Colorless, odorless gas',
+            'Used in breathing air, fire, and air canisters.',
+          )
+        "
+      >
+        <div class="element-number">8</div>
+        <div class="element-symbol">O</div>
+        <div class="element-name">Oxygen</div>
+        <div class="element-mass">15.999</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Breathing Air<br />Fire<br />Air Canisters
+        </div>
+      </button>
+      <button
+        class="element halogen"
+        style="grid-column: 17"
+        onclick="
+          elementInformation(
+            'Fluorine',
+            9,
+            'F',
+            18.998,
+            'Halogen',
+            'Pale yellow gas',
+            'Used in toothpaste, pharmaceuticals, and disinfectants.',
+          )
+        "
+      >
+        <div class="element-number">9</div>
+        <div class="element-symbol">F</div>
+        <div class="element-name">Fluorine</div>
+        <div class="element-mass">18.998</div>
+        <div class="tooltip">
+          <u>Common Uses:</u
+          ><br />Toothpaste<br />Pharmaceauticals<br />Disinfectants
+        </div>
+      </button>
+      <button
+        class="element noble-gas"
+        style="grid-column: 18"
+        onclick="
+          elementInformation(
+            'Neon',
+            10,
+            'Ne',
+            20.18,
+            'Noble Gas',
+            'Colorless gas',
+            'Used in neon signs, plasma TVs, and advertising displays.',
+          )
+        "
+      >
+        <div class="element-number">10</div>
+        <div class="element-symbol">Ne</div>
+        <div class="element-name">Neon</div>
+        <div class="element-mass">20.180</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Neon Signs<br />Plasma TVs<br />Advertising
+          Displays
+        </div>
+      </button>
+
+      <!-- Third row -->
+      <button
+        class="element alkali-metal"
+        style="grid-column: 1"
+        onclick="
+          elementInformation(
+            'Sodium',
+            11,
+            'Na',
+            22.99,
+            'Alkali Metal',
+            'Soft, silvery metal',
+            'Used in table salt, baking soda, and drain cleaner.',
+          )
+        "
+      >
+        <div class="element-number">11</div>
+        <div class="element-symbol">Na</div>
+        <div class="element-name">Sodium</div>
+        <div class="element-mass">22.990</div>
+        <div class="tooltip">
+          <u>Common Uses:</u>Table Salt<br />Baking Soda<br />Drain Cleaner
+        </div>
+      </button>
+      <button
+        class="element alkaline-earth-metal"
+        style="grid-column: 2"
+        onclick="
+          elementInformation(
+            'Magnesium',
+            12,
+            'Mg',
+            24.305,
+            'Alkaline Earth Metal',
+            'Silvery white metal',
+            'Used in fireworks, Epsom salts, and flare guns.',
+          )
+        "
+      >
+        <div class="element-number">12</div>
+        <div class="element-symbol">Mg</div>
+        <div class="element-name">Magnesium</div>
+        <div class="element-mass">24.305</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Fireworks<br />Epsom Salts<br />Flare Guns
+        </div>
+      </button>
+      <button
+        class="element post-transition-metal"
+        style="grid-column: 13"
+        onclick="
+          elementInformation(
+            'Aluminum',
+            13,
+            'Al',
+            26.982,
+            'Post-Transition Metal',
+            'Silvery white metal',
+            'Used in foil, cans, and bike frames.',
+          )
+        "
+      >
+        <div class="element-number">13</div>
+        <div class="element-symbol">Al</div>
+        <div class="element-name">Alluminum</div>
+        <div class="element-mass">26.982</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Foil<br />Cans<br />Bike Frames
+        </div>
+      </button>
+      <button
+        class="element metalloid"
+        style="grid-column: 14"
+        onclick="
+          elementInformation(
+            'Silicon',
+            14,
+            'Si',
+            28.085,
+            'Metalloid',
+            'Gray crystalline solid',
+            'Used in computer chips, smartphones, and optical fibers.',
+          )
+        "
+      >
+        <div class="element-number">14</div>
+        <div class="element-symbol">Si</div>
+        <div class="element-name">Silicon</div>
+        <div class="element-mass">28.085</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Computer Chips<br />Smartphones<br />Obtical
+          Fibers
+        </div>
+      </button>
+      <button
+        class="element nonmetal"
+        style="grid-column: 15"
+        onclick="
+          elementInformation(
+            'Phosphorus',
+            15,
+            'P',
+            30.974,
+            'Nonmetal',
+            'White or red solid',
+            'Used in matches, pesticides, and fireworks.',
+          )
+        "
+      >
+        <div class="element-number">15</div>
+        <div class="element-symbol">P</div>
+        <div class="element-name">Phosphorus</div>
+        <div class="element-mass">30.974</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Matches<br />Pesticides<br />Fireworks
+        </div>
+      </button>
+      <button
+        class="element nonmetal"
+        style="grid-column: 16"
+        onclick="
+          elementInformation(
+            'Sulfur',
+            16,
+            'S',
+            32.06,
+            'Nonmetal',
+            'Yellow crystalline solid',
+            'Used in matches, cleaning products, and skincare products.',
+          )
+        "
+      >
+        <div class="element-number">16</div>
+        <div class="element-symbol">S</div>
+        <div class="element-name">Sulfur</div>
+        <div class="element-mass">32.06</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Matches<br />Cleaning Products<br />Skincare
+          Products
+        </div>
+      </button>
+      <button
+        class="element halogen"
+        style="grid-column: 17"
+        onclick="
+          elementInformation(
+            'Chlorine',
+            17,
+            'Cl',
+            35.45,
+            'Halogen',
+            'Yellow-green gas',
+            'Used in bleach, pool sanitizers, and PVC pipes.',
+          )
+        "
+      >
+        <div class="element-number">17</div>
+        <div class="element-symbol">Cl</div>
+        <div class="element-name">Chlorine</div>
+        <div class="element-mass">35.45</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Bleach<br />Pool Sanitizers<br />PVC Pipes
+        </div>
+      </button>
+      <button
+        class="element noble-gas"
+        style="grid-column: 18"
+        onclick="
+          elementInformation(
+            'Argon',
+            18,
+            'Ar',
+            39.948,
+            'Noble Gas',
+            'Colorless gas',
+            'Used in light bulbs, medical lasers, and insulation.',
+          )
+        "
+      >
+        <div class="element-number">18</div>
+        <div class="element-symbol">Ar</div>
+        <div class="element-name">Argon</div>
+        <div class="element-mass">39.948</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Light Bulbs<br />Medical Lasers<br />Insulation
+        </div>
+      </button>
+
+      <!-- Fourth row -->
+      <button
+        class="element alkali-metal"
+        style="grid-column: 1"
+        onclick="
+          elementInformation(
+            'Potassium',
+            19,
+            'K',
+            39.098,
+            'Alkali Metal',
+            'Soft, silvery metal',
+            'Used in fertilizers, soaps, and fireworks.',
+          )
+        "
+      >
+        <div class="element-number">19</div>
+        <div class="element-symbol">K</div>
+        <div class="element-name">Potassium</div>
+        <div class="element-mass">39.098</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Bananas<br />Electrolytes<br />Supplements
+        </div>
+      </button>
+      <button
+        class="element alkaline-earth-metal"
+        style="grid-column: 2"
+        onclick="
+          elementInformation(
+            'Calcium',
+            20,
+            'Ca',
+            40.078,
+            'Alkaline Earth Metal',
+            'Soft, gray metal',
+            'Used in cement, bones, and cheese production.',
+          )
+        "
+      >
+        <div class="element-number">20</div>
+        <div class="element-symbol">Ca</div>
+        <div class="element-name">Calcium</div>
+        <div class="element-mass">40.078</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Bones<br />Antacids<br />Chalk
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 3"
+        onclick="
+          elementInformation(
+            'Scandium',
+            21,
+            'Sc',
+            44.956,
+            'Transition Metal',
+            'Silvery white metal',
+            'Used in aerospace components, bicycles, and sports equipment.',
+          )
+        "
+      >
+        <div class="element-number">21</div>
+        <div class="element-symbol">Sc</div>
+        <div class="element-name">Scandium</div>
+        <div class="element-mass">44.956</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Bike Frames<br />Sport Equipment<br />Fishing
+          Rods
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 4"
+        onclick="
+          elementInformation(
+            'Titanium',
+            22,
+            'Ti',
+            47.867,
+            'Transition Metal',
+            'Strong, light metal',
+            'Used in aircraft, prosthetics, and paint pigments.',
+          )
+        "
+      >
+        <div class="element-number">22</div>
+        <div class="element-symbol">Ti</div>
+        <div class="element-name">Titanium</div>
+        <div class="element-mass">47.88</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Plane Engines<br />Sunscreen<br />Golf Clubs
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 5"
+        onclick="
+          elementInformation(
+            'Vanadium',
+            23,
+            'V',
+            50.942,
+            'Transition Metal',
+            'Gray, ductile metal',
+            'Used in steel alloys, batteries, and tools.',
+          )
+        "
+      >
+        <div class="element-number">23</div>
+        <div class="element-symbol">V</div>
+        <div class="element-name">Vanadium</div>
+        <div class="element-mass">50.942</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Infrared Lenses<br />Kitchen Knives<br />Dental
+          Implants
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 6"
+        onclick="
+          elementInformation(
+            'Chromium',
+            24,
+            'Cr',
+            51.996,
+            'Transition Metal',
+            'Shiny, hard metal',
+            'Used in stainless steel, chrome plating, and pigments.',
+          )
+        "
+      >
+        <div class="element-number">24</div>
+        <div class="element-symbol">Cr</div>
+        <div class="element-name">Chromium</div>
+        <div class="element-mass">51.996</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Stainless Steel<br />Car Parts<br />Tanning
+          Leather
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 7"
+        onclick="
+          elementInformation(
+            'Manganese',
+            25,
+            'Mn',
+            54.938,
+            'Transition Metal',
+            'Gray-white metal',
+            'Used in steel production, batteries, and pigments.',
+          )
+        "
+      >
+        <div class="element-number">25</div>
+        <div class="element-symbol">Mn</div>
+        <div class="element-name">Manganese</div>
+        <div class="element-mass">54.938</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Stained Glass<br />Welding Rods<br />Water
+          Treatment
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 8"
+        onclick="
+          elementInformation(
+            'Iron',
+            26,
+            'Fe',
+            55.845,
+            'Transition Metal',
+            'Shiny, magnetic metal',
+            'Used in construction, tools, and machinery.',
+          )
+        "
+      >
+        <div class="element-number">26</div>
+        <div class="element-symbol">Fe</div>
+        <div class="element-name">Iron</div>
+        <div class="element-mass">55.933</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Bridges<br />Plumbing<br />Cookware
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 9"
+        onclick="
+          elementInformation(
+            'Cobalt',
+            27,
+            'Co',
+            58.933,
+            'Transition Metal',
+            'Hard, magnetic metal',
+            'Used in magnets, batteries, and ceramics.',
+          )
+        "
+      >
+        <div class="element-number">27</div>
+        <div class="element-symbol">Co</div>
+        <div class="element-name">Cobalt</div>
+        <div class="element-mass">58.933</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Magnets<br />Guitar Strings<br />Radiotherapy
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 10"
+        onclick="
+          elementInformation(
+            'Nickel',
+            28,
+            'Ni',
+            58.693,
+            'Transition Metal',
+            'Shiny, hard metal',
+            'Used in coins, batteries, and alloys.',
+          )
+        "
+      >
+        <div class="element-number">28</div>
+        <div class="element-symbol">Ni</div>
+        <div class="element-name">Nickel</div>
+        <div class="element-mass">58.933</div>
+        <div class="tooltip">
+          <u>Common Uses:</u> Coins<br />Wires<br />Armor Plating
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 11"
+        onclick="
+          elementInformation(
+            'Copper',
+            29,
+            'Cu',
+            63.546,
+            'Transition Metal',
+            'Reddish, ductile metal',
+            'Used in wires, plumbing, and coins.',
+          )
+        "
+      >
+        <div class="element-number">29</div>
+        <div class="element-symbol">Cu</div>
+        <div class="element-name">Copper</div>
+        <div class="element-mass">63.546</div>
+        <div class="tooltip">
+          <u>Common Uses:</u> Wires<br />Pennies<br />Statue of Liberty
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 12"
+        onclick="
+          elementInformation(
+            'Zinc',
+            30,
+            'Zn',
+            65.38,
+            'Transition Metal',
+            'Bluish-white metal',
+            'Used in galvanization, batteries, and alloys.',
+          )
+        "
+      >
+        <div class="element-number">30</div>
+        <div class="element-symbol">Zn</div>
+        <div class="element-name">Zinc</div>
+        <div class="element-mass">65.38</div>
+        <div class="tooltip">
+          <u>Common Uses:</u> Vitamins<br />Brass<br />Skincare Products
+        </div>
+      </button>
+      <button
+        class="element post-transition-metal"
+        style="grid-column: 13"
+        onclick="
+          elementInformation(
+            'Gallium',
+            31,
+            'Ga',
+            69.723,
+            'Post-Transition Metal',
+            'Soft, silvery metal',
+            'Used in semiconductors, LEDs, and thermometers.',
+          )
+        "
+      >
+        <div class="element-number">31</div>
+        <div class="element-symbol">Ga</div>
+        <div class="element-name">Gallium</div>
+        <div class="element-mass">69.723</div>
+        <div class="tooltip">
+          <u>Common Uses:</u> Solar Panels<br />Transistors<br />LEDs
+        </div>
+      </button>
+      <button
+        class="element metalloid"
+        style="grid-column: 14"
+        onclick="
+          elementInformation(
+            'Germanium',
+            32,
+            'Ge',
+            72.63,
+            'Metalloid',
+            'Brittle, gray metal',
+            'Used in transistors, fiber optics, and infrared optics.',
+          )
+        "
+      >
+        <div class="element-number">32</div>
+        <div class="element-symbol">Ge</div>
+        <div class="element-name">Germanium</div>
+        <div class="element-mass">72.64</div>
+        <div class="tooltip">
+          <u>Common Uses:</u> Nanowires<br />Night Vision<br />Solar Cells
+        </div>
+      </button>
+      <button
+        class="element nonmetal"
+        style="grid-column: 15"
+        onclick="
+          elementInformation(
+            'Arsenic',
+            33,
+            'As',
+            74.922,
+            'Nonmetal',
+            'Gray, brittle solid',
+            'Used in pesticides, semiconductors, and glass production.',
+          )
+        "
+      >
+        <div class="element-number">33</div>
+        <div class="element-symbol">As</div>
+        <div class="element-name">Arsenic</div>
+        <div class="element-mass">74.9216</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Rat Poison<br />Leukemia Treatment<br />Asthma
+          Treatment
+        </div>
+      </button>
+      <button
+        class="element nonmetal"
+        style="grid-column: 16"
+        onclick="
+          elementInformation(
+            'Selenium',
+            34,
+            'Se',
+            78.971,
+            'Nonmetal',
+            'Brittle, gray solid',
+            'Used in photocopiers, glass production, and dietary supplements.',
+          )
+        "
+      >
+        <div class="element-number">34</div>
+        <div class="element-symbol">Se</div>
+        <div class="element-name">Selenium</div>
+        <div class="element-mass">78.96</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Rectifiers<br />Anti-Dandruff Soap<br />Photoconductors
+        </div>
+      </button>
+      <button
+        class="element halogen"
+        style="grid-column: 17"
+        onclick="
+          elementInformation(
+            'Bromine',
+            35,
+            'Br',
+            79.904,
+            'Halogen',
+            'Red-brown liquid',
+            'Used in flame retardants, photography, and water purification.',
+          )
+        "
+      >
+        <div class="element-number">35</div>
+        <div class="element-symbol">Br</div>
+        <div class="element-name">Bromine</div>
+        <div class="element-mass">79.904</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Flame-retardants<br />Furniture Foam<br />Insecticides
+        </div>
+      </button>
+      <button
+        class="element noble-gas"
+        style="grid-column: 18"
+        onclick="
+          elementInformation(
+            'Krypton',
+            36,
+            'Kr',
+            83.798,
+            'Noble Gas',
+            'Colorless gas',
+            'Used in lighting, photography, and lasers.',
+          )
+        "
+      >
+        <div class="element-number">36</div>
+        <div class="element-symbol">Kr</div>
+        <div class="element-name">Krypton</div>
+        <div class="element-mass">83.798</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Lasers<br />Insulated Windows<br />Plasma TVs
+        </div>
+      </button>
+      <button
+        class="element alkali-metal"
+        style="grid-column: 1"
+        onclick="
+          elementInformation(
+            'Rubidium',
+            37,
+            'Rb',
+            85.468,
+            'Alkali Metal',
+            'Soft, silvery metal',
+            'Used in atomic clocks, research, and electronics.',
+          )
+        "
+      >
+        <div class="element-number">37</div>
+        <div class="element-symbol">Rb</div>
+        <div class="element-name">Rubidium</div>
+        <div class="element-mass">85.468</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Atomic Clocks<br />Vapor Turbines<br />Photocells
+        </div>
+      </button>
+      <button
+        class="element alkaline-earth-metal"
+        style="grid-column: 2"
+        onclick="
+          elementInformation(
+            'Strontium',
+            38,
+            'Sr',
+            87.62,
+            'Alkaline Earth Metal',
+            'Soft, silvery metal',
+            'Used in fireworks, magnets, and dental care.',
+          )
+        "
+      >
+        <div class="element-number">38</div>
+        <div class="element-symbol">Sr</div>
+        <div class="element-name">Strontium</div>
+        <div class="element-mass">87.62</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Fermentation<br />Pyrotechnics<br />Sensitive
+          Toothpaste
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 3"
+        onclick="
+          elementInformation(
+            'Yttrium',
+            39,
+            'Y',
+            88.906,
+            'Transition Metal',
+            'Silvery, ductile metal',
+            'Used in LEDs, lasers, and superconductors.',
+          )
+        "
+      >
+        <div class="element-number">39</div>
+        <div class="element-symbol">Y</div>
+        <div class="element-name">Yttrium</div>
+        <div class="element-mass">88.906</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Superconductors<br />Cataract Removal<br />White
+          LEDs
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 4"
+        onclick="
+          elementInformation(
+            'Zirconium',
+            40,
+            'Zr',
+            91.224,
+            'Transition Metal',
+            'Shiny, corrosion-resistant metal',
+            'Used in nuclear reactors, ceramics, and jewelry.',
+          )
+        "
+      >
+        <div class="element-number">40</div>
+        <div class="element-symbol">Zr</div>
+        <div class="element-name">Zirconium</div>
+        <div class="element-mass">91.224</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Dental Crowns<br />Hip Replacements<br />Deodorants
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 5"
+        onclick="
+          elementInformation(
+            'Niobium',
+            41,
+            'Nb',
+            92.906,
+            'Transition Metal',
+            'Soft, gray metal',
+            'Used in superconductors, jet engines, and alloys.',
+          )
+        "
+      >
+        <div class="element-number">41</div>
+        <div class="element-symbol">Nb</div>
+        <div class="element-name">Niobium</div>
+        <div class="element-mass">92.906</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />MRI Scanners<br />Particle Accelerators<br />Rockets
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 6"
+        onclick="
+          elementInformation(
+            'Molybdenum',
+            42,
+            'Mo',
+            95.95,
+            'Transition Metal',
+            'Hard, silvery metal',
+            'Used in steel, lubricants, and catalysts.',
+          )
+        "
+      >
+        <div class="element-number">42</div>
+        <div class="element-symbol">Mo</div>
+        <div class="element-name">Molybdenum</div>
+        <div class="element-mass">95.95</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Electrical Contacts<br />High-Strength
+          Steel<br />Exhaust Systems
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 7"
+        onclick="
+          elementInformation(
+            'Technetium',
+            43,
+            'Tc',
+            98,
+            'Transition Metal',
+            'Radioactive, silvery metal',
+            'Used in medical imaging, research, and industrial gauges.',
+          )
+        "
+      >
+        <div class="element-number">43</div>
+        <div class="element-symbol">Tc</div>
+        <div class="element-name">Technetium</div>
+        <div class="element-mass">98</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Medical Imaging<br />Corrosion Inhibitor<br />Radioactive
+          Tracer
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 8"
+        onclick="
+          elementInformation(
+            'Ruthenium',
+            44,
+            'Ru',
+            101.07,
+            'Transition Metal',
+            'Hard, silvery metal',
+            'Used in electronics, catalysts, and jewelry.',
+          )
+        "
+      >
+        <div class="element-number">44</div>
+        <div class="element-symbol">Ru</div>
+        <div class="element-name">Ruthenium</div>
+        <div class="element-mass">101.07</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Electrical Contacts<br />Chip Resistors<br />Chemical
+          Catalysts
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 9"
+        onclick="
+          elementInformation(
+            'Rhodium',
+            45,
+            'Rh',
+            102.91,
+            'Transition Metal',
+            'Shiny, silvery metal',
+            'Used in catalytic converters, jewelry, and mirrors.',
+          )
+        "
+      >
+        <div class="element-number">45</div>
+        <div class="element-symbol">Rh</div>
+        <div class="element-name">Rhodium</div>
+        <div class="element-mass">102.91</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Jewelry<br />Mirrors<br />Thermocouples
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 10"
+        onclick="
+          elementInformation(
+            'Palladium',
+            46,
+            'Pd',
+            106.42,
+            'Transition Metal',
+            'Soft, silvery metal',
+            'Used in electronics, catalytic converters, and jewelry.',
+          )
+        "
+      >
+        <div class="element-number">46</div>
+        <div class="element-symbol">Pd</div>
+        <div class="element-name">Palladium</div>
+        <div class="element-mass">106.42</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Electronics<br />Hydrogen Storage<br />Dental
+          Materials
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 11"
+        onclick="
+          elementInformation(
+            'Silver',
+            47,
+            'Ag',
+            107.87,
+            'Transition Metal',
+            'Shiny, white metal',
+            'Used in coins, jewelry, and electronics.',
+          )
+        "
+      >
+        <div class="element-number">47</div>
+        <div class="element-symbol">Ag</div>
+        <div class="element-name">Silver</div>
+        <div class="element-mass">107.87</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Jewelry<br />Electronics<br />Antimicrobial
+          Coatings
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 12"
+        onclick="
+          elementInformation(
+            'Cadmium',
+            48,
+            'Cd',
+            112.41,
+            'Transition Metal',
+            'Soft, bluish-white metal',
+            'Used in batteries, coatings, and pigments.',
+          )
+        "
+      >
+        <div class="element-number">48</div>
+        <div class="element-symbol">Cd</div>
+        <div class="element-name">Cadmium</div>
+        <div class="element-mass">112.41</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Rechargeable Batteries<br />Pigments<br />Solar
+          Cells
+        </div>
+      </button>
+      <button
+        class="element post-transition-metal"
+        style="grid-column: 13"
+        onclick="
+          elementInformation(
+            'Indium',
+            49,
+            'In',
+            114.82,
+            'Post-Transition Metal',
+            'Soft, silvery metal',
+            'Used in touchscreens, semiconductors, and solders.',
+          )
+        "
+      >
+        <div class="element-number">49</div>
+        <div class="element-symbol">In</div>
+        <div class="element-name">Indium</div>
+        <div class="element-mass">114.82</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Touchscreens<br />Semiconductors<br />Solar
+          Panels
+        </div>
+      </button>
+      <button
+        class="element post-transition-metal"
+        style="grid-column: 14"
+        onclick="
+          elementInformation(
+            'Tin',
+            50,
+            'Sn',
+            118.71,
+            'Post-Transition Metal',
+            'Soft, silvery-white metal',
+            'Used in soldering, plating, and alloys.',
+          )
+        "
+      >
+        <div class="element-number">50</div>
+        <div class="element-symbol">Sn</div>
+        <div class="element-name">Tin</div>
+        <div class="element-mass">118.71</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Food Packaging<br />Soldering<br />Roofing
+        </div>
+      </button>
+      <button
+        class="element metalloid"
+        style="grid-column: 15"
+        onclick="
+          elementInformation(
+            'Antimony',
+            51,
+            'Sb',
+            121.76,
+            'Metalloid',
+            'Brittle, silvery-white solid',
+            'Used in flame retardants, alloys, and batteries.',
+          )
+        "
+      >
+        <div class="element-number">51</div>
+        <div class="element-symbol">Sb</div>
+        <div class="element-name">Antimony</div>
+        <div class="element-mass">121.76</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Flame Retardants<br />Lead-Acid Batteries<br />Semiconductors
+        </div>
+      </button>
+      <button
+        class="element metalloid"
+        style="grid-column: 16"
+        onclick="
+          elementInformation(
+            'Tellurium',
+            52,
+            'Te',
+            127.6,
+            'Metalloid',
+            'Brittle, silvery-white solid',
+            'Used in thermoelectric devices, solar panels, and alloys.',
+          )
+        "
+      >
+        <div class="element-number">52</div>
+        <div class="element-symbol">Te</div>
+        <div class="element-name">Tellurium</div>
+        <div class="element-mass">127.60</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Solar Panels<br />Thermoelectrics<br />Bactericides
+        </div>
+      </button>
+      <button
+        class="element halogen"
+        style="grid-column: 17"
+        onclick="
+          elementInformation(
+            'Iodine',
+            53,
+            'I',
+            126.9,
+            'Halogen',
+            'Shiny, black solid',
+            'Used in disinfectants, medical imaging, and dyes.',
+          )
+        "
+      >
+        <div class="element-number">53</div>
+        <div class="element-symbol">I</div>
+        <div class="element-name">Iodine</div>
+        <div class="element-mass">126.90</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Antiseptics<br />Photography<br />Thyroid
+          Health
+        </div>
+      </button>
+      <button
+        class="element noble-gas"
+        style="grid-column: 18"
+        onclick="
+          elementInformation(
+            'Xenon',
+            54,
+            'Xe',
+            131.29,
+            'Noble Gas',
+            'Colorless gas',
+            'Used in lighting, anesthesia, and lasers.',
+          )
+        "
+      >
+        <div class="element-number">54</div>
+        <div class="element-symbol">Xe</div>
+        <div class="element-name">Xenon</div>
+        <div class="element-mass">131.29</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Flash Lamps<br />Ion Thrusters<br />Anesthesia
+        </div>
+      </button>
+      <button
+        class="element alkali-metal"
+        style="grid-column: 1"
+        onclick="
+          elementInformation(
+            'Cesium',
+            55,
+            'Cs',
+            132.91,
+            'Alkali Metal',
+            'Soft, golden metal',
+            'Used in atomic clocks, electronics, and research.',
+          )
+        "
+      >
+        <div class="element-number">55</div>
+        <div class="element-symbol">Cs</div>
+        <div class="element-name">Caesium</div>
+        <div class="element-mass">132.91</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Atomic Clocks<br />Oil Drilling Fluids<br />Radiation
+          Detection
+        </div>
+      </button>
+      <button
+        class="element alkaline-earth-metal"
+        style="grid-column: 2"
+        onclick="
+          elementInformation(
+            'Barium',
+            56,
+            'Ba',
+            137.33,
+            'Alkaline Earth Metal',
+            'Soft, silvery metal',
+            'Used in X-ray imaging, fireworks, and glass production.',
+          )
+        "
+      >
+        <div class="element-number">56</div>
+        <div class="element-symbol">Ba</div>
+        <div class="element-name">Barium</div>
+        <div class="element-mass">137.33</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Medical Imaging<br />Fireworks<br />Ceramics
+        </div>
+      </button>
+      <div class="element transition-metal" style="grid-column: 3"></div>
+      <button
+        class="element transition-metal"
+        style="grid-column: 4"
+        onclick="
+          elementInformation(
+            'Hafnium',
+            72,
+            'Hf',
+            178.49,
+            'Transition Metal',
+            'A silvery, ductile metal',
+            'Used in nuclear reactors, electronics, and aerospace.',
+          )
+        "
+      >
+        <div class="element-number">72</div>
+        <div class="element-symbol">Hf</div>
+        <div class="element-name">Hafnium</div>
+        <div class="element-mass">178.49</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Nuclear Reactors<br />Microprocessors<br />High-Temperature
+          Ceramics
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 5"
+        onclick="
+          elementInformation(
+            'Tantalum',
+            73,
+            'Ta',
+            180.95,
+            'Transition Metal',
+            'A dense, hard metal',
+            'Used in capacitors, medical implants, and camera lenses.',
+          )
+        "
+      >
+        <div class="element-number">73</div>
+        <div class="element-symbol">Ta</div>
+        <div class="element-name">Tantalum</div>
+        <div class="element-mass">180.95</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Capacitors<br />Medical Implants<br />Camera
+          Lenses
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 6"
+        onclick="
+          elementInformation(
+            'Tungsten',
+            74,
+            'W',
+            183.84,
+            'Transition Metal',
+            'A dense, heavy metal',
+            'Used in light bulb filaments, X-ray targets, and drill bits.',
+          )
+        "
+      >
+        <div class="element-number">74</div>
+        <div class="element-symbol">W</div>
+        <div class="element-name">Tungsten</div>
+        <div class="element-mass">183.84</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Light Bulb Filaments<br />X-ray Targets<br />Drill
+          Bits
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 7"
+        onclick="
+          elementInformation(
+            'Rhenium',
+            75,
+            'Re',
+            186.21,
+            'Transition Metal',
+            'A high melting point metal',
+            'Used in jet engines, catalysts, and electrical contacts.',
+          )
+        "
+      >
+        <div class="element-number">75</div>
+        <div class="element-symbol">Re</div>
+        <div class="element-name">Rhenium</div>
+        <div class="element-mass">186.21</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Jet Engines<br />Catalysts<br />Electrical
+          Contacts
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 8"
+        onclick="
+          elementInformation(
+            'Osmium',
+            76,
+            'Os',
+            190.23,
+            'Transition Metal',
+            'A dense, blue-gray metal',
+            'Used in pen tips, electrical contacts, and medical implants.',
+          )
+        "
+      >
+        <div class="element-number">76</div>
+        <div class="element-symbol">Os</div>
+        <div class="element-name">Osmium</div>
+        <div class="element-mass">190.23</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Pen Tips<br />Electrical Contacts<br />Medical
+          Implants
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 9"
+        onclick="
+          elementInformation(
+            'Iridium',
+            77,
+            'Ir',
+            192.22,
+            'Transition Metal',
+            'A hard, corrosion-resistant metal',
+            'Used in crucibles, space equipment, and pen tips.',
+          )
+        "
+      >
+        <div class="element-number">77</div>
+        <div class="element-symbol">Ir</div>
+        <div class="element-name">Iridium</div>
+        <div class="element-mass">192.22</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Crucibles<br />Space Equipment<br />Pen Tips
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 10"
+        onclick="
+          elementInformation(
+            'Platinum',
+            78,
+            'Pt',
+            195.08,
+            'Transition Metal',
+            'A dense, malleable metal',
+            'Used in jewelry, catalytic converters, and medical devices.',
+          )
+        "
+      >
+        <div class="element-number">78</div>
+        <div class="element-symbol">Pt</div>
+        <div class="element-name">Platinum</div>
+        <div class="element-mass">195.08</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Jewelry<br />Catalytic Converters<br />Medical
+          Devices
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 11"
+        onclick="
+          elementInformation(
+            'Gold',
+            79,
+            'Au',
+            196.97,
+            'Transition Metal',
+            'A soft, yellow precious metal',
+            'Used in jewelry, electronics, and medical implants.',
+          )
+        "
+      >
+        <div class="element-number">79</div>
+        <div class="element-symbol">Au</div>
+        <div class="element-name">Gold</div>
+        <div class="element-mass">196.97</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Jewelry<br />Electronics<br />Medical
+          Implants
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 12"
+        onclick="
+          elementInformation(
+            'Mercury',
+            80,
+            'Hg',
+            200.59,
+            'Transition Metal',
+            'A liquid metal at room temperature',
+            'Used in thermometers, barometers, and lighting.',
+          )
+        "
+      >
+        <div class="element-number">80</div>
+        <div class="element-symbol">Hg</div>
+        <div class="element-name">Mercury</div>
+        <div class="element-mass">200.59</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Thermometers<br />Barometers<br />Lighting
+        </div>
+      </button>
+      <button
+        class="element post-transition-metal"
+        style="grid-column: 13"
+        onclick="
+          elementInformation(
+            'Thallium',
+            81,
+            'Tl',
+            204.38,
+            'Post-transition Metal',
+            'A soft, heavy metal',
+            'Used in optical glass, rat poison, and electronics.',
+          )
+        "
+      >
+        <div class="element-number">81</div>
+        <div class="element-symbol">Tl</div>
+        <div class="element-name">Thallium</div>
+        <div class="element-mass">204.38</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Optical Glass<br />Rat Poison<br />Electronics
+        </div>
+      </button>
+      <button
+        class="element post-transition-metal"
+        style="grid-column: 14"
+        onclick="
+          elementInformation(
+            'Lead',
+            82,
+            'Pb',
+            207.2,
+            'Post-transition Metal',
+            'A soft, malleable metal',
+            'Used in radiation shielding, batteries, and ammunition.',
+          )
+        "
+      >
+        <div class="element-number">82</div>
+        <div class="element-symbol">Pb</div>
+        <div class="element-name">Lead</div>
+        <div class="element-mass">207.2</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Radiation Shielding<br />Batteries<br />Ammunition
+        </div>
+      </button>
+      <button
+        class="element post-transition-metal"
+        style="grid-column: 15"
+        onclick="
+          elementInformation(
+            'Bismuth',
+            83,
+            'Bi',
+            208.98,
+            'Post-transition Metal',
+            'A brittle, silvery metal',
+            'Used in medical procedures, cosmetics, and fire extinguishers.',
+          )
+        "
+      >
+        <div class="element-number">83</div>
+        <div class="element-symbol">Bi</div>
+        <div class="element-name">Bismuth</div>
+        <div class="element-mass">208.98</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Medical Procedures<br />Cosmetics<br />Fire
+          Extinguishers
+        </div>
+      </button>
+      <button
+        class="element metalloid"
+        style="grid-column: 16"
+        onclick="
+          elementInformation(
+            'Polonium',
+            84,
+            'Po',
+            209,
+            'Metalloid',
+            'A highly radioactive element',
+            'Used in antistatic devices, spacecraft power, and research.',
+          )
+        "
+      >
+        <div class="element-number">84</div>
+        <div class="element-symbol">Po</div>
+        <div class="element-name">Polonium</div>
+        <div class="element-mass">209</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Antistatic Devices<br />Spacecraft Power<br />Research
+        </div>
+      </button>
+      <button
+        class="element halogen"
+        style="grid-column: 17"
+        onclick="
+          elementInformation(
+            'Astatine',
+            85,
+            'At',
+            210,
+            'Halogen',
+            'A highly radioactive element',
+            'Used in cancer treatment, medical research, and radioactive tracing.',
+          )
+        "
+      >
+        <div class="element-number">85</div>
+        <div class="element-symbol">At</div>
+        <div class="element-name">Astatine</div>
+        <div class="element-mass">210</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Cancer Treatment<br />Medical Research<br />Radioactive
+          Tracing
+        </div>
+      </button>
+      <button
+        class="element noble-gas"
+        style="grid-column: 18"
+        onclick="
+          elementInformation(
+            'Radon',
+            86,
+            'Rn',
+            222,
+            'Noble Gas',
+            'A radioactive noble gas',
+            'Used in cancer treatment, earthquake prediction, and research.',
+          )
+        "
+      >
+        <div class="element-number">86</div>
+        <div class="element-symbol">Rn</div>
+        <div class="element-name">Radon</div>
+        <div class="element-mass">222</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Cancer Treatment<br />Earthquake
+          Prediction<br />Research
+        </div>
+      </button>
+      <button
+        class="element alkali-metal"
+        style="grid-column: 1"
+        onclick="
+          elementInformation(
+            'Francium',
+            87,
+            'Fr',
+            223,
+            'Alkali Metal',
+            'A highly radioactive metal',
+            'Used in ongoing research, cancer treatment research, and radioactive studies.',
+          )
+        "
+      >
+        <div class="element-number">87</div>
+        <div class="element-symbol">Fr</div>
+        <div class="element-name">Francium</div>
+        <div class="element-mass">223</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Cancer Treatment
+          Research<br />Radioactive Studies
+        </div>
+      </button>
+
+      <button
+        class="element alkaline-earth-metal"
+        style="grid-column: 2"
+        onclick="
+          elementInformation(
+            'Radium',
+            88,
+            'Ra',
+            226,
+            'Alkaline Earth Metal',
+            'A radioactive element',
+            'Used in cancer treatment, radioluminescent paint, and ongoing research.',
+          )
+        "
+      >
+        <div class="element-number">88</div>
+        <div class="element-symbol">Ra</div>
+        <div class="element-name">Radium</div>
+        <div class="element-mass">226</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Cancer Treatment<br />Radioluminescent
+          Paint<br />Ongoing Research
+        </div>
+      </button>
+      <div class="element" style="grid-column: 3"></div>
+      <button
+        class="element transition-metal"
+        style="grid-column: 4"
+        onclick="
+          elementInformation(
+            'Rutherfordium',
+            104,
+            'Rf',
+            267,
+            'Transition Metal',
+            'A synthetic element',
+            'Used in ongoing research, heavy ion studies, and radioactive research.',
+          )
+        "
+      >
+        <div class="element-number">104</div>
+        <div class="element-symbol">Rf</div>
+        <div class="element-name">Rutherfordium</div>
+        <div class="element-mass">267</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Heavy Ion Studies<br />Radioactive
+          Research
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 5"
+        onclick="
+          elementInformation(
+            'Dubnium',
+            105,
+            'Db',
+            270,
+            'Transition Metal',
+            'A synthetic element',
+            'Used in ongoing research, atomic studies, and radioactive experiments.',
+          )
+        "
+      >
+        <div class="element-number">105</div>
+        <div class="element-symbol">Db</div>
+        <div class="element-name">Dubnium</div>
+        <div class="element-mass">270</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Atomic Studies<br />Radioactive
+          Experiments
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 6"
+        onclick="
+          elementInformation(
+            'Seaborgium',
+            106,
+            'Sg',
+            271,
+            'Transition Metal',
+            'A synthetic element',
+            'Used in ongoing research, nuclear physics, and radioactive studies.',
+          )
+        "
+      >
+        <div class="element-number">106</div>
+        <div class="element-symbol">Sg</div>
+        <div class="element-name">Seaborgium</div>
+        <div class="element-mass">271</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Nuclear Physics<br />Radioactive
+          Studies
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 7"
+        onclick="
+          elementInformation(
+            'Bohrium',
+            107,
+            'Bh',
+            270,
+            'Transition Metal',
+            'A synthetic element',
+            'Used in ongoing research, high-energy physics, and atomic structure studies.',
+          )
+        "
+      >
+        <div class="element-number">107</div>
+        <div class="element-symbol">Bh</div>
+        <div class="element-name">Bohrium</div>
+        <div class="element-mass">270</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />High-Energy Physics<br />Atomic
+          Structure Studies
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 8"
+        onclick="
+          elementInformation(
+            'Hassium',
+            108,
+            'Hs',
+            277,
+            'Transition Metal',
+            'A synthetic element',
+            'Used in ongoing research, heavy element studies, and radioactive analysis.',
+          )
+        "
+      >
+        <div class="element-number">108</div>
+        <div class="element-symbol">Hs</div>
+        <div class="element-name">Hassium</div>
+        <div class="element-mass">277</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Heavy Element
+          Studies<br />Radioactive Analysis
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 9"
+        onclick="
+          elementInformation(
+            'Meitnerium',
+            109,
+            'Mt',
+            278,
+            'Transition Metal',
+            'A synthetic element',
+            'Used in ongoing research, atomic structure studies, and radioactive research.',
+          )
+        "
+      >
+        <div class="element-number">109</div>
+        <div class="element-symbol">Mt</div>
+        <div class="element-name">Meitnerium</div>
+        <div class="element-mass">278</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Atomic Structure
+          Studies<br />Radioactive Research
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 10"
+        onclick="
+          elementInformation(
+            'Darmstadtium',
+            110,
+            'Ds',
+            281,
+            'Transition Metal',
+            'A synthetic element',
+            'Used in ongoing research, nuclear chemistry, and radioactive analysis.',
+          )
+        "
+      >
+        <div class="element-number">110</div>
+        <div class="element-symbol">Ds</div>
+        <div class="element-name">Darmstadtium</div>
+        <div class="element-mass">281</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Nuclear Chemistry<br />Radioactive
+          Analysis
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 11"
+        onclick="
+          elementInformation(
+            'Roentgenium',
+            111,
+            'Rg',
+            282,
+            'Transition Metal',
+            'A synthetic element',
+            'Used in ongoing research, heavy element research, and radioactive studies.',
+          )
+        "
+      >
+        <div class="element-number">111</div>
+        <div class="element-symbol">Rg</div>
+        <div class="element-name">Roentgenium</div>
+        <div class="element-mass">282</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Heavy Element
+          Research<br />Radioactive Studies
+        </div>
+      </button>
+      <button
+        class="element transition-metal"
+        style="grid-column: 12"
+        onclick="
+          elementInformation(
+            'Copernicium',
+            112,
+            'Cn',
+            285,
+            'Transition Metal',
+            'A synthetic element',
+            'Used in ongoing research, atomic research, and radioactive analysis.',
+          )
+        "
+      >
+        <div class="element-number">112</div>
+        <div class="element-symbol">Cn</div>
+        <div class="element-name">Copernicium</div>
+        <div class="element-mass">285</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Atomic Research<br />Radioactive
+          Analysis
+        </div>
+      </button>
+      <button
+        class="element post-transition-metal"
+        style="grid-column: 13"
+        onclick="
+          elementInformation(
+            'Nihonium',
+            113,
+            'Nh',
+            286,
+            'Post-Transition Metal',
+            'A synthetic element',
+            'Used in ongoing research, nuclear studies, and radioactive research.',
+          )
+        "
+      >
+        <div class="element-number">113</div>
+        <div class="element-symbol">Nh</div>
+        <div class="element-name">Nihonium</div>
+        <div class="element-mass">286</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Nuclear Studies<br />Radioactive
+          Research
+        </div>
+      </button>
+      <button
+        class="element post-transition-metal"
+        style="grid-column: 14"
+        onclick="
+          elementInformation(
+            'Flerovium',
+            114,
+            'Fl',
+            289,
+            'Post-Transition Metal',
+            'A synthetic element',
+            'Used in ongoing research, atomic studies, and radioactive analysis.',
+          )
+        "
+      >
+        <div class="element-number">114</div>
+        <div class="element-symbol">Fl</div>
+        <div class="element-name">Flerovium</div>
+        <div class="element-mass">289</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Atomic Studies<br />Radioactive
+          Analysis
+        </div>
+      </button>
+      <button
+        class="element post-transition-metal"
+        style="grid-column: 15"
+        onclick="
+          elementInformation(
+            'Moscovium',
+            115,
+            'Mc',
+            290,
+            'Post-Transition Metal',
+            'A synthetic element',
+            'Used in ongoing research, atomic research, and radioactive experiments.',
+          )
+        "
+      >
+        <div class="element-number">115</div>
+        <div class="element-symbol">Mc</div>
+        <div class="element-name">Moscovium</div>
+        <div class="element-mass">290</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Atomic Research<br />Radioactive
+          Experiments
+        </div>
+      </button>
+      <button
+        class="element post-transition-metal"
+        style="grid-column: 16"
+        onclick="
+          elementInformation(
+            'Livermorium',
+            116,
+            'Lv',
+            293,
+            'Post-Transition Metal',
+            'A synthetic element',
+            'Used in ongoing research, radioactive studies, and elemental analysis.',
+          )
+        "
+      >
+        <div class="element-number">116</div>
+        <div class="element-symbol">Lv</div>
+        <div class="element-name">Livermorium</div>
+        <div class="element-mass">293</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Radioactive Studies<br />Elemental
+          Analysis
+        </div>
+      </button>
+      <button
+        class="element metalloid"
+        style="grid-column: 17"
+        onclick="
+          elementInformation(
+            'Tennessine',
+            117,
+            'Ts',
+            294,
+            'Metalloid',
+            'A synthetic element',
+            'Used in ongoing research, nuclear physics, and radioactive analysis.',
+          )
+        "
+      >
+        <div class="element-number">117</div>
+        <div class="element-symbol">Ts</div>
+        <div class="element-name">Tennessine</div>
+        <div class="element-mass">294</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Nuclear Physics<br />Radioactive
+          Analysis
+        </div>
+      </button>
+      <button
+        class="element noble-gas"
+        style="grid-column: 18; margin-bottom: 40px"
+        onclick="
+          elementInformation(
+            'Oganesson',
+            118,
+            'Og',
+            294,
+            'Noble Gas',
+            'A synthetic noble gas',
+            'Used in ongoing research, heavy element studies, and radioactive research.',
+          )
+        "
+      >
+        <div class="element-number">118</div>
+        <div class="element-symbol">Og</div>
+        <div class="element-name">Oganesson</div>
+        <div class="element-mass">294</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Heavy Element
+          Studies<br />Radioactive Research
+        </div>
+      </button>
+
+      <div class="element" style="grid-column: 1"></div>
+      <div class="element" style="grid-column: 2"></div>
+      <div class="element" style="grid-column: 3"></div>
+      <div class="element" style="grid-column: 4"></div>
+      <div class="element" style="grid-column: 5"></div>
+      <div class="element" style="grid-column: 6"></div>
+      <div class="element" style="grid-column: 7"></div>
+      <div class="element" style="grid-column: 8"></div>
+      <div class="element" style="grid-column: 9"></div>
+      <div class="element" style="grid-column: 10"></div>
+      <div class="element" style="grid-column: 11"></div>
+      <div class="element" style="grid-column: 12"></div>
+      <div class="element" style="grid-column: 13"></div>
+      <div class="element" style="grid-column: 14"></div>
+      <div class="element" style="grid-column: 15"></div>
+      <div class="element" style="grid-column: 16"></div>
+      <div class="element" style="grid-column: 17"></div>
+
+      <button
+        class="element lanthanide"
+        style="grid-column: 3"
+        onclick="
+          elementInformation(
+            'Lanthanum',
+            57,
+            'La',
+            138.91,
+            'Lanthanide',
+            'Soft, silvery-white metal',
+            'Used in camera lenses, lighting, and catalysts.',
+          )
+        "
+      >
+        <div class="element-number">57</div>
+        <div class="element-symbol">La</div>
+        <div class="element-name">Lanthanum</div>
+        <div class="element-mass">138.91</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Camera Lenses<br />Carbon Arc Lighting<br />Battery
+          Electrodes
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 4"
+        onclick="
+          elementInformation(
+            'Cerium',
+            58,
+            'Ce',
+            140.12,
+            'Lanthanide',
+            'Soft, silvery-white metal',
+            'Used in catalytic converters, glass polishing, and flints.',
+          )
+        "
+      >
+        <div class="element-number">58</div>
+        <div class="element-symbol">Ce</div>
+        <div class="element-name">Cerium</div>
+        <div class="element-mass">140.12</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Glass Polishing<br />Lighter Flints<br />Catalysts
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 5"
+        onclick="
+          elementInformation(
+            'Praseodymium',
+            59,
+            'Pr',
+            140.91,
+            'Lanthanide',
+            'Soft, silvery-yellow metal',
+            'Used in magnets, aircraft engines, and coloring glass.',
+          )
+        "
+      >
+        <div class="element-number">59</div>
+        <div class="element-symbol">Pr</div>
+        <div class="element-name">Praseodymium</div>
+        <div class="element-mass">140.91</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Aircraft Engines<br />Magnets<br />Glass
+          Coloring
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 6"
+        onclick="
+          elementInformation(
+            'Neodymium',
+            60,
+            'Nd',
+            144.24,
+            'Lanthanide',
+            'Soft, silvery-white metal',
+            'Used in strong magnets, lasers, and wind turbines.',
+          )
+        "
+      >
+        <div class="element-number">60</div>
+        <div class="element-symbol">Nd</div>
+        <div class="element-name">Neodymium</div>
+        <div class="element-mass">144.24</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Magnets<br />Lasers<br />Glass Coloring
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 7"
+        onclick="
+          elementInformation(
+            'Promethium',
+            61,
+            'Pm',
+            145,
+            'Lanthanide',
+            'Radioactive, silvery metal',
+            'Used in nuclear batteries, research, and luminous paints.',
+          )
+        "
+      >
+        <div class="element-number">61</div>
+        <div class="element-symbol">Pm</div>
+        <div class="element-name">Promethium</div>
+        <div class="element-mass">145</div>
+        <div class="tooltip">
+          <u>Common Uses:</u
+          ><br />Pacemakers<br />Research<br />Glow-in-the-Dark Paint
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 8"
+        onclick="
+          elementInformation(
+            'Samarium',
+            62,
+            'Sm',
+            150.36,
+            'Lanthanide',
+            'Soft, silvery metal',
+            'Used in magnets, lasers, and cancer treatments.',
+          )
+        "
+      >
+        <div class="element-number">62</div>
+        <div class="element-symbol">Sm</div>
+        <div class="element-name">Samarium</div>
+        <div class="element-mass">150.36</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Magnets<br />Optical Glass<br />Neutron
+          Absorber
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 9"
+        onclick="
+          elementInformation(
+            'Europium',
+            63,
+            'Eu',
+            151.96,
+            'Lanthanide',
+            'Soft, silvery metal',
+            'Used in phosphorescent materials, TV screens, and currency security.',
+          )
+        "
+      >
+        <div class="element-number">63</div>
+        <div class="element-symbol">Eu</div>
+        <div class="element-name">Europium</div>
+        <div class="element-mass">151.96</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />TV Screens<br />Fluorescent Lamps<br />Banknote
+          Anti-Counterfeit
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 10"
+        onclick="
+          elementInformation(
+            'Gadolinium',
+            64,
+            'Gd',
+            157.25,
+            'Lanthanide',
+            'Soft, silvery metal',
+            'Used in MRI contrast agents, magnets, and nuclear reactors.',
+          )
+        "
+      >
+        <div class="element-number">64</div>
+        <div class="element-symbol">Gd</div>
+        <div class="element-name">Gadolinium</div>
+        <div class="element-mass">157.25</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />MRI Contrast Agent<br />Neutron Shielding<br />Phosphors
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 11"
+        onclick="
+          elementInformation(
+            'Terbium',
+            65,
+            'Tb',
+            158.93,
+            'Lanthanide',
+            'Soft, silvery metal',
+            'Used in fluorescent lamps, magnets, and lasers.',
+          )
+        "
+      >
+        <div class="element-number">65</div>
+        <div class="element-symbol">Tb</div>
+        <div class="element-name">Terbium</div>
+        <div class="element-mass">158.93</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Phosphors<br />Green Laser Light<br />Fuel
+          Cells
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 12"
+        onclick="
+          elementInformation(
+            'Dysprosium',
+            66,
+            'Dy',
+            162.5,
+            'Lanthanide',
+            'Soft, silvery metal',
+            'Used in magnets, lasers, and nuclear reactors.',
+          )
+        "
+      >
+        <div class="element-number">66</div>
+        <div class="element-symbol">Dy</div>
+        <div class="element-name">Dysprosium</div>
+        <div class="element-mass">162.50</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Magnets<br />Laser Materials<br />Control
+          Rods in Nuclear Reactors
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 13"
+        onclick="
+          elementInformation(
+            'Holmium',
+            67,
+            'Ho',
+            164.93,
+            'Lanthanide',
+            'Soft, silvery metal',
+            'Used in magnets, lasers, and nuclear reactors.',
+          )
+        "
+      >
+        <div class="element-number">67</div>
+        <div class="element-symbol">Ho</div>
+        <div class="element-name">Holmium</div>
+        <div class="element-mass">164.93</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Lasers<br />Magnets<br />Nuclear Reactors
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 14"
+        onclick="
+          elementInformation(
+            'Erbium',
+            68,
+            'Er',
+            167.26,
+            'Lanthanide',
+            'Soft, silvery metal',
+            'Used in fiber optics, lasers, and nuclear reactors.',
+          )
+        "
+      >
+        <div class="element-number">68</div>
+        <div class="element-symbol">Er</div>
+        <div class="element-name">Erbium</div>
+        <div class="element-mass">167.26</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Fiber Optics<br />Lasers<br />Coloring Glass
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 15"
+        onclick="
+          elementInformation(
+            'Thulium',
+            69,
+            'Tm',
+            168.93,
+            'Lanthanide',
+            'Soft, silvery metal',
+            'Used in X-ray machines, lasers, and research.',
+          )
+        "
+      >
+        <div class="element-number">69</div>
+        <div class="element-symbol">Tm</div>
+        <div class="element-name">Thulium</div>
+        <div class="element-mass">168.93</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />X-ray Devices<br />Portable Metal Detectors
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 16"
+        onclick="
+          elementInformation(
+            'Ytterbium',
+            70,
+            'Yb',
+            173.04,
+            'Lanthanide',
+            'Soft, silvery metal',
+            'Used in lasers, metallurgy, and atomic clocks.',
+          )
+        "
+      >
+        <div class="element-number">70</div>
+        <div class="element-symbol">Yb</div>
+        <div class="element-name">Ytterbium</div>
+        <div class="element-mass">173.04</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Optical Materials<br />Atomic Clocks<br />Radiographic
+          Imaging
+        </div>
+      </button>
+      <button
+        class="element lanthanide"
+        style="grid-column: 17"
+        onclick="
+          elementInformation(
+            'Lutetium',
+            71,
+            'Lu',
+            174.97,
+            'Lanthanide',
+            'Dense, silvery metal',
+            'Used in PET scanners, catalysts, and research.',
+          )
+        "
+      >
+        <div class="element-number">71</div>
+        <div class="element-symbol">Lu</div>
+        <div class="element-name">Lutetium</div>
+        <div class="element-mass">174.97</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Petroleum Refining<br />Cancer Treatment<br />Positron
+          Tomography
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 3"
+        onclick="
+          elementInformation(
+            'Actinium',
+            89,
+            'Ac',
+            227,
+            'Actinide',
+            'Soft, silvery metal',
+            'Used in radiation therapy and research.',
+          )
+        "
+      >
+        <div class="element-number">89</div>
+        <div class="element-symbol">Ac</div>
+        <div class="element-name">Actinium</div>
+        <div class="element-mass">227</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Radiation Therapy<br />Neutron Sources<br />Cancer
+          Research
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 4"
+        onclick="
+          elementInformation(
+            'Thorium',
+            90,
+            'Th',
+            232.04,
+            'Actinide',
+            'Silvery metal',
+            'Used in nuclear fuel and alloys.',
+          )
+        "
+      >
+        <div class="element-number">90</div>
+        <div class="element-symbol">Th</div>
+        <div class="element-name">Thorium</div>
+        <div class="element-mass">232.04</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Nuclear Fuel<br />High-Temp Ceramics<br />Gas
+          Mantles
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 5"
+        onclick="
+          elementInformation(
+            'Protactinium',
+            91,
+            'Pa',
+            231.04,
+            'Actinide',
+            'Silvery metal',
+            'Used in research and nuclear applications.',
+          )
+        "
+      >
+        <div class="element-number">91</div>
+        <div class="element-symbol">Pa</div>
+        <div class="element-name">Protactinium</div>
+        <div class="element-mass">231.04</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Nuclear Science<br />Dating
+          of Sediments
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 6"
+        onclick="
+          elementInformation(
+            'Uranium',
+            92,
+            'U',
+            238.03,
+            'Actinide',
+            'Dense, silvery metal',
+            'Used in nuclear reactors and weapons.',
+          )
+        "
+      >
+        <div class="element-number">92</div>
+        <div class="element-symbol">U</div>
+        <div class="element-name">Uranium</div>
+        <div class="element-mass">238.03</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Nuclear Power<br />Armor-Piercing
+          Ammunition<br />Ongoing Research
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 7"
+        onclick="
+          elementInformation(
+            'Neptunium',
+            93,
+            'Np',
+            237,
+            'Actinide',
+            'Silvery metal',
+            'Used in nuclear research and reactors.',
+          )
+        "
+      >
+        <div class="element-number">93</div>
+        <div class="element-symbol">Np</div>
+        <div class="element-name">Neptunium</div>
+        <div class="element-mass">237</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Nuclear Weapons<br />Neutron
+          Detection
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 8"
+        onclick="
+          elementInformation(
+            'Plutonium',
+            94,
+            'Pu',
+            244,
+            'Actinide',
+            'Radioactive, silvery metal',
+            'Used in nuclear reactors and weapons.',
+          )
+        "
+      >
+        <div class="element-number">94</div>
+        <div class="element-symbol">Pu</div>
+        <div class="element-name">Plutonium</div>
+        <div class="element-mass">244</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Nuclear Weapons<br />Space Exploration Power
+          Sources<br />Ongoing Research
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 9"
+        onclick="
+          elementInformation(
+            'Americium',
+            95,
+            'Am',
+            243,
+            'Actinide',
+            'Radioactive, silvery metal',
+            'Used in smoke detectors and research.',
+          )
+        "
+      >
+        <div class="element-number">95</div>
+        <div class="element-symbol">Am</div>
+        <div class="element-name">Americium</div>
+        <div class="element-mass">243</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Smoke Detectors<br />Radiography<br />Neutron
+          Sources
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 10"
+        onclick="
+          elementInformation(
+            'Curium',
+            96,
+            'Cm',
+            247,
+            'Actinide',
+            'A radioactive metal',
+            'Used in space exploration power sources, neutron sources, and ongoing research.',
+          )
+        "
+      >
+        <div class="element-number">96</div>
+        <div class="element-symbol">Cm</div>
+        <div class="element-name">Curium</div>
+        <div class="element-mass">247</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Space Exploration Power Sources<br />Neutron
+          Sources<br />Ongoing Research
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 11"
+        onclick="
+          elementInformation(
+            'Berkelium',
+            97,
+            'Bk',
+            247,
+            'Actinide',
+            'Radioactive, silvery metal',
+            'Used in research and as a neutron source.',
+          )
+        "
+      >
+        <div class="element-number">97</div>
+        <div class="element-symbol">Bk</div>
+        <div class="element-name">Berkelium</div>
+        <div class="element-mass">247</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Target Material for
+          Synthesis<br />High-Temperature Applications
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 12"
+        onclick="
+          elementInformation(
+            'Californium',
+            98,
+            'Cf',
+            251,
+            'Actinide',
+            'Radioactive, silvery metal',
+            'Used in nuclear reactors and medical treatments.',
+          )
+        "
+      >
+        <div class="element-number">98</div>
+        <div class="element-symbol">Cf</div>
+        <div class="element-name">Californium</div>
+        <div class="element-mass">251</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Neutron Sources<br />Radiography<br />Cancer
+          Treatment
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 13"
+        onclick="
+          elementInformation(
+            'Einsteinium',
+            99,
+            'Es',
+            252,
+            'Actinide',
+            'Radioactive, silvery metal',
+            'Used in research and as a neutron source.',
+          )
+        "
+      >
+        <div class="element-number">99</div>
+        <div class="element-symbol">Es</div>
+        <div class="element-name">Einsteinium</div>
+        <div class="element-mass">252</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Element Synthesis<br />Radiation
+          Studies
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 14"
+        onclick="
+          elementInformation(
+            'Fermium',
+            100,
+            'Fm',
+            257,
+            'Actinide',
+            'Radioactive, silvery metal',
+            'Used in research and nuclear applications.',
+          )
+        "
+      >
+        <div class="element-number">100</div>
+        <div class="element-symbol">Fm</div>
+        <div class="element-name">Fermium</div>
+        <div class="element-mass">257</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Element Synthesis<br />Neutron
+          Studies
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 15"
+        onclick="
+          elementInformation(
+            'Mendelevium',
+            101,
+            'Md',
+            258,
+            'Actinide',
+            'Radioactive, silvery metal',
+            'Used in research and as a neutron source.',
+          )
+        "
+      >
+        <div class="element-number">101</div>
+        <div class="element-symbol">Md</div>
+        <div class="element-name">Mendelevium</div>
+        <div class="element-mass">258</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Element Synthesis<br />Atomic
+          Research
+        </div>
+      </button>
+      <button
+        class="element actinide"
+        style="grid-column: 16"
+        onclick="
+          elementInformation(
+            'Nobelium',
+            102,
+            'No',
+            259,
+            'Actinide',
+            'Radioactive, silvery metal',
+            'Used in research and nuclear reactions.',
+          )
+        "
+      >
+        <div class="element-number">102</div>
+        <div class="element-symbol">No</div>
+        <div class="element-name">Nobelium</div>
+        <div class="element-mass">259</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Atomic Research<br />Element
+          Synthesis
+        </div>
+      </button>
+      <button class="element actinide" style="grid-column: 17">
+        <div class="element-number">103</div>
+        <div class="element-symbol">Lr</div>
+        <div class="element-name">Lawrencium</div>
+        <div class="element-mass">262</div>
+        <div class="tooltip">
+          <u>Common Uses:</u><br />Ongoing Research<br />Atomic Research<br />Heavy
+          Element Studies
+        </div>
+      </button>
+    </div>
+    <footer class="footer">
+      <div class="footer-content">
+        <p>OCdt M.T. Clement</p>
+        <p>L1035</p>
+        <p>ILOY (Slasher)</p>
+        <p>CHE 121-F01</p>
+        <p>
+          Email:
+          <a href="mailto:mason.clement@rmc-cmr.ca">mason.clement@rmc-cmr.ca</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

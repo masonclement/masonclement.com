@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>POE102-W2S0 Pjct.</title>
+    <style>
+      body {
+        font-family: Georgia, serif;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 20px;
+        background: url("./img/images-ww2leaders/poe103-w2s0-background.png")
+          no-repeat center center fixed;
+        background-size: cover;
+        color: white;
+      }
+
+      .header {
+        width: 100%;
+        background: #273829;
+        color: white;
+        text-align: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        border-bottom: 3px solid #3c5e34;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        box-sizing: border-box;
+        z-index: 1000;
+      }
+
+      footer {
+        width: 100%;
+        background: #273829;
+        color: white;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        border-top: 3px solid #3c5e34;
+        font-size: 14px;
+        font-family: Arial, sans-serif;
+        padding: 10px 20px;
+        box-sizing: border-box;
+        z-index: 1000;
+      }
+
+      .header .buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .header .buttons button {
+        background-color: #3c5e34;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+
+      .header .buttons button:hover {
+        background-color: #5b8f4f;
+      }
+
+      .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+        background: #273829;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        display: none;
+        padding: 20px;
+        color: white;
+        z-index: 2000;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        border: 3px solid #3c5e34;
+      }
+
+      .popup.show {
+        display: block;
+        opacity: 1;
+      }
+
+      .popup img {
+        float: left;
+        margin-right: 20px;
+        width: 150px;
+        border-radius: 10px;
+        align-self: center;
+      }
+
+      .popup .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        color: white;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .popup .close:hover {
+        color: red;
+      }
+
+      #aboutPopup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+        background: #273829;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        display: none;
+        padding: 20px;
+        color: white;
+        z-index: 2000;
+        max-height: 80%;
+        overflow-y: auto;
+        border: 3px solid #3c5e34;
+        scrollbar-base-color: #273829;
+      }
+
+      #aboutPopup h5 {
+        font-size: 12px;
+        line-height: 1.5;
+        text-align: center;
+      }
+
+      #aboutPopup p {
+        font-size: 12px;
+        line-height: 1.5;
+        text-align: left;
+      }
+
+      #sourcesPopup h2 {
+        text-align: center;
+      }
+
+      #sourcesPopup p {
+        text-align: center;
+        text-decoration: underline;
+        color: #5aa6f7;
+      }
+
+      #contactPopup h2,
+      p {
+        text-align: center;
+      }
+
+      .leader {
+        position: relative;
+        margin: 15px;
+        text-align: center;
+        transition: transform 0.2s;
+      }
+
+      .leader:hover {
+        transform: scale(1.1);
+      }
+
+      .leader img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 3px solid #333;
+      }
+
+      .leader:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .tooltip {
+        position: absolute;
+        top: -20%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #273829;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      .axis,
+      .allies {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 20px 0;
+        width: 100%;
+      }
+
+      .axis h2 {
+        width: 100%;
+        text-align: center;
+        color: #f75a5a;
+      }
+
+      .allies h2 {
+        width: 100%;
+        text-align: center;
+        color: #5aa6f7;
+      }
+
+      #popupOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5); /* dark semi-transparent overlay */
+        z-index: 1999; /* just under the popup */
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      #popupOverlay.show {
+        display: block;
+        opacity: 1;
+      }
+
+      a {
+        color: #89be4c; /* your custom color */
+        text-decoration: underline; /* optional */
+      }
+
+      a:hover {
+        color: #b1e378; /* color on hover */
+        text-decoration: none; /* remove underline on hover */
+      }
+
+      a:visited {
+        color: #a675f7; /* optional: different color after click */
+      }
+    </style>
+    <script>
+      function showPopup(id) {
+        const popup = document.getElementById(id);
+        const overlay = document.getElementById("popupOverlay");
+
+        // Show the popup
+        popup.classList.add("popup");
+        popup.style.display = "block";
+        popup.style.zIndex = "2000";
+
+        // Show the overlay
+        overlay.style.display = "block";
+        requestAnimationFrame(() => {
+          popup.classList.add("show");
+          overlay.classList.add("show");
+        });
+      }
+
+      function closePopup(id) {
+        const popup = document.getElementById(id);
+        const overlay = document.getElementById("popupOverlay");
+
+        // Hide popup with fade-out
+        popup.classList.remove("show");
+        overlay.classList.remove("show");
+
+        setTimeout(() => {
+          popup.style.display = "none";
+          overlay.style.display = "none";
+        }, 500); // match transition time
+      }
+
+      document.getElementById("popupOverlay").addEventListener("click", () => {
+        const openPopups = document.querySelectorAll(".popup.show");
+        openPopups.forEach((popup) => {
+          popup.classList.remove("show");
+          setTimeout(() => (popup.style.display = "none"), 500);
+        });
+
+        const overlay = document.getElementById("popupOverlay");
+        overlay.classList.remove("show");
+        setTimeout(() => (overlay.style.display = "none"), 500);
+      });
+    </script>
+  </head>
+  <body>
+    <header class="header">
+      <div><strong>POE102-W2S0 Project │ WWII Leaders & Politics</strong></div>
+      <div class="buttons">
+        <button onclick="showPopup('aboutPopup')">About</button>
+        <button onclick="showPopup('sourcesPopup')">Sources</button>
+        <button onclick="showPopup('contactPopup')">Contact</button>
+      </div>
+    </header>
+
+    <div id="popupOverlay"></div>
+
+    <div id="aboutPopup" class="popup">
+      <button class="close" onclick="closePopup('aboutPopup')">&times;</button>
+      <p>
+        OCdt M. T. Clement<br /><br />Dr D. Last<br /><br />POE102-W2S0<br /><br />January
+        16, 2025
+      </p>
+      <h5>The Politics of WWII</h5>
+      <p style="text-indent: 30px">
+        World War II, between the years 1939 and 1945, was absolutely riddled by
+        the political convictions and the leadership aura of the different
+        people involved. The leaders, from different countries and holding
+        different ideas, really made a mark on how the war played out and how
+        things were shaped after it. Each leader had his own take on the whole
+        global mess, from Franklin Roosevelt's democratic values to Adolf
+        Hitler's totalitarian rule. The political views of these men made World
+        War II more than a struggle for survival but, in many respects, a fight
+        between competing visions of the world.
+      </p>
+
+      <p style="text-indent: 30px">
+        The President of the United States, Franklin D. Roosevelt was in office
+        to guide the nation through some pretty bad times in the Great
+        Depression and World War II. Coming from the Democratic Party, Roosevelt
+        was a staunch believer in government support for people and democratic
+        principles. His leadership during the War elaborated the importance of
+        working together internationally, especially with the UK and Soviet
+        Union. Roosevelt was all for defeating the Axis powers and establishing
+        a post-war world that focused on peace and collective security, where
+        the United Nations could be created eventually. His commitment to
+        democracy and freedom greatly shaped the American response to the war,
+        while his vision for what comes next did much to set the frame for the
+        Allied strategy.
+      </p>
+
+      <p style="text-indent: 30px">
+        Churchill, Prime Minister of the UK, joined hands with Roosevelt to lead
+        from the front against Nazi Germany and the Axis powers. As the leader
+        of the Conservative Party, Churchill was a strong advocate of democracy
+        and freedom in the face of the fascist axis swallowing Europe. His
+        leadership during the Battle of Britain and throughout the war really
+        set him in stone as one of the most highly regarded leaders of the 20th
+        century. His close rapport with Roosevelt was extremely significant for
+        the development of the coalition of the Allies, as both were
+        wholeheartedly devoted to the defeat of the Axis powers and to seeing
+        the post-war world defend democratic ideals. His speeches and defiance
+        against all odds inspired his country and the world and set him in
+        history as a symbol of resistance against tyranny.
+      </p>
+
+      <p style="text-indent: 30px">
+        While Roosevelt and Churchill fought for democracy, Joseph Stalin's
+        vision for the future of the world was rooted in communism. As the
+        leader of the Soviet Union, Stalin had a fundamentally different
+        approach to governance. His regime was distinguished by brutal
+        totalitarian policies, mass purges, and repression against political
+        opposition. However, after the invasion of the Soviet Union by Nazi
+        Germany in 1941, he became integral to the Allied war effort. While
+        remaining deeply suspicious of his Western Allies, Stalin joined
+        Roosevelt and Churchill to defeat Hitler's forces. For Stalin, the
+        expansion of communism and establishing a socialist order were the
+        issues, and that directly put him at variance with the capitalist
+        countries, even after the close of the war.
+      </p>
+
+      <p style="text-indent: 30px">
+        On the other hand, Adolf Hitler's Nazi regime promoted hardcore
+        nationalism, militarism, and the belief in one race's supremacy over all
+        the rest, one hell of a contrast from what Roosevelt and Churchill
+        believed in. So, Hitler was all about fascism, strict control and the
+        "Aryan" race on a pedestal. And it was precisely this extreme effort to
+        expand and build up this huge empire of Germans that actually initiated
+        World War II. Under his rule, it was all about aggressive land grabbing
+        and those horrific policies targeting Jews that led to the Holocaust.
+        His actions brought immense suffering and also left a deep scar on the
+        conscience of the world. Hitler's concept for the world was all about
+        tyranny and the racial ladder, which is the reason he is considered one
+        of the most hazardous and abhorred characters in history.
+      </p>
+
+      <p style="text-indent: 30px">
+        Another significant partner within the Axis Powers was Italy, under the
+        leadership of Benito Mussolini. So, Mussolini was the person who
+        initiated Fascism and actually believing in a strong state and a
+        centralized government he wanted to revert Italy to Old Glory by
+        takeover with military strength and stern control. But his alliance with
+        Hitler gave Axis the boost needed, and Italy entered into the warzone.
+        However, unlike Hitler, Mussolini's regime is the one which started to
+        show signs of defeating when the axis started to experience losses. The
+        political philosophy of Mussolini was all about national pride combined
+        with unity, whereas, as a leader, he totally crashed when Italy got
+        defeated. He fell in 1943 when he was overthrown and then executed,
+        which practically marked the end of his brutal rule.
+      </p>
+
+      <p style="text-indent: 30px">
+        Hideki Tojo was the Prime Minister of Japan who played an important role
+        in the imperialist goals of Japan during World War II. Tojo was a
+        military man with strong feelings of nationalism, believing that Japan
+        should be in charge of Asia. His government was responsible for most of
+        Japan's military actions in East Asia and the Pacific, including the
+        infamous attack on Pearl Harbor, which drew the United States into the
+        war. Tojo had this vision for a future of Japanese imperialism: Japan
+        ruling this whole sphere of influence called the "Greater East Asia
+        Co-Prosperity Sphere". His very brutal military campaigns across China,
+        Southeast Asia, and the Pacific gathered much hatred towards him from
+        around the world. After Japan's defeat, Tojo was arrested and executed
+        for war crimes, which finally put his aggressive and expansionist
+        policies to an end.
+      </p>
+
+      <p style="text-indent: 30px">
+        These figures were very important in terms of their political views and
+        leadership with respect to what happened during World War II and what
+        would emerge as a result. These different ideologies democracy, fascism,
+        communism, and militarism engendered a world war that was quite singular
+        in history. Leaders like Roosevelt and Churchill were about saving
+        freedom and democracy, while guys like Hitler, Mussolini, and Tojo had
+        expansion and cruel ambitions on their minds. So, while the war brought
+        down the Axis powers, it also heralded great changes in the way the
+        world worked: the emergence of the United States and the Soviet Union as
+        superpowers, for instance, and the establishment of bodies of regional
+        and international government designed to prevent any future global
+        conflict.
+      </p>
+    </div>
+
+    <div id="sourcesPopup" class="popup">
+      <button class="close" onclick="closePopup('sourcesPopup')">
+        &times;
+      </button>
+      <h2>SOURCES AND CITATION</h2>
+      <p>
+        <a
+          href="https://www.thecollector.com/who-were-the-most-important-leaders-of-wwii/"
+          target="_blank"
+          >https://www.thecollector.com/who-were-the-most-important-leaders-of-wwii/</a
+        ><br /><br />
+        <a
+          href="https://www.internationalinside.com/benito-mussolini-italian-dictator/"
+          target="_blank"
+          >https://www.internationalinside.com/benito-mussolini-italian-dictator/</a
+        ><br /><br />
+        <a
+          href="https://www.history.com/topics/world-war-ii/world-war-ii-history"
+          target="_blank"
+          >https://www.history.com/topics/world-war-ii/world-war-ii-history</a
+        ><br /><br />
+        <a
+          href="https://www.thecollector.com/japan-greater-east-asia-co-prosperity-sphere/"
+          target="_blank"
+          >https://www.thecollector.com/japan-greater-east-asia-co-prosperity-sphere/</a
+        ><br /><br />
+        <a
+          href="https://alphahistory.com/nazigermany/hitler-and-mussolini/"
+          target="_blank"
+          >https://alphahistory.com/nazigermany/hitler-and-mussolini/</a
+        ><br /><br />
+        <a href="https://youtu.be/_uk_6vfqwTA" target="_blank"
+          >https://youtu.be/_uk_6vfqwTA</a
+        ><br /><br />
+        <a href="https://youtu.be/fo2Rb9h788s" target="_blank"
+          >https://youtu.be/fo2Rb9h788s</a
+        ><br /><br />
+        <a
+          href="https://www.historyextra.com/period/second-world-war/ww2-why-did-allies-win-axis-lose/"
+          target="_blank"
+          >https://www.historyextra.com/period/second-world-war/ww2-why-did-allies-win-axis-lose/</a
+        ><br /><br />
+        <a
+          href="https://www.worldwar2facts.org/franklin-roosevelt.html"
+          target="_blank"
+          >https://www.worldwar2facts.org/franklin-roosevelt.html</a
+        ><br /><br />
+        <a
+          href="https://www.potterswaxmuseum.com/wwii/joseph-stalin/"
+          target="_blank"
+          >https://www.potterswaxmuseum.com/wwii/joseph-stalin/</a
+        >
+      </p>
+    </div>
+    <div id="contactPopup" class="popup">
+      <button class="close" onclick="closePopup('contactPopup')">
+        &times;
+      </button>
+      <h2>CONTACT INFORMATION</h2>
+      <p>OCdt M.T. Clement</p>
+      <p>L1035</p>
+      <p>ILOY (Slasher)</p>
+      <p>POE102-W2S0</p>
+      <p>
+        Email:
+        <a href="mailto:mason.clement@rmc-cmr.ca">mason.clement@rmc-cmr.ca</a>
+      </p>
+      <p>Phone: <a href="tel:+15067594903">(506) 759-4903</a></p>
+    </div>
+
+    <div class="allies">
+      <h2>Allied Leaders</h2>
+      <div class="leader" onclick="showPopup('popup1')">
+        <img
+          src="./img/images-ww2leaders/churchill.png"
+          alt="Winston Churchill"
+        />
+        <div class="tooltip">Winston Churchill</div>
+      </div>
+      <div id="popup1" class="popup">
+        <button class="close" onclick="closePopup('popup1')">&times;</button>
+        <img
+          src="./img/images-ww2leaders/churchill.png"
+          alt="Winston Churchill"
+        />
+        <h2>Winston Churchill</h2>
+        <p><strong>Political View:</strong> Democracy</p>
+        <p><strong>Position:</strong> Prime Minister of the United Kingdom</p>
+        <p>
+          Winston Churchill was a tough, determined leader during WWII. His
+          stand against Nazi Germany, especially during the Battle of Britain,
+          and those inspiring speeches he gave really managed to pump up British
+          morale and get the Allied war effort going. As a big supporter of
+          democracy and freedom, Churchill was against the fascism and
+          totalitarianism that the Axis powers were putting down.
+        </p>
+      </div>
+
+      <div class="leader" onclick="showPopup('popup2')">
+        <img
+          src="./img/images-ww2leaders/roosevelt.png"
+          alt="Franklin D. Roosevelt"
+        />
+        <div class="tooltip">Franklin D. Roosevelt</div>
+      </div>
+      <div id="popup2" class="popup">
+        <button class="close" onclick="closePopup('popup2')">&times;</button>
+        <img
+          src="./img/images-ww2leaders/roosevelt.png"
+          alt="Franklin D. Roosevelt"
+        />
+        <h2>Franklin D. Roosevelt</h2>
+        <p><strong>Political View:</strong> Liberal Democracy</p>
+        <p><strong>Position:</strong> President of the United States</p>
+        <p>
+          Franklin D. Roosevelt led the nation through the Great Depression and
+          WWII, all while fighting for democracy, international cooperation, and
+          human rights. He helped forge the Grand Alliance with the US, the UK,
+          and the Soviet Union, playing a major part in shaping the post-war
+          global order, including the creation of the United Nations.
+        </p>
+      </div>
+
+      <div class="leader" onclick="showPopup('popup3')">
+        <img src="./img/images-ww2leaders/stalin.png" alt="Joseph Stalin" />
+        <div class="tooltip">Joseph Stalin</div>
+      </div>
+      <div id="popup3" class="popup">
+        <button class="close" onclick="closePopup('popup3')">&times;</button>
+        <img src="./img/images-ww2leaders/stalin.png" alt="Joseph Stalin" />
+        <h2>Joseph Stalin</h2>
+        <p><strong>Political View:</strong> Communism</p>
+        <p><strong>Position:</strong> Premier of the Soviet Union</p>
+        <p>
+          Joseph Stalin was in charge of the Soviet Union during these awfully
+          rough times. At first, he kept his Allies at arm's length, but his
+          military on the eastside of the globe were key to taking down Germany
+          at this time. Despite teaming up with the Allies at thie time, his
+          idea of communism really shaped how the world was after the war, but
+          his harsh rule back home and his serious distrust of the West
+          definitely colored his time in power.
+        </p>
+      </div>
+    </div>
+
+    <div class="axis">
+      <h2>Axis Leaders</h2>
+      <div class="leader" onclick="showPopup('popup4')">
+        <img src="./img/images-ww2leaders/hitler.png" alt="Adolf Hitler" />
+        <div class="tooltip">Adolf Hitler</div>
+      </div>
+      <div id="popup4" class="popup">
+        <button class="close" onclick="closePopup('popup4')">&times;</button>
+        <img src="./img/images-ww2leaders/hitler.png" alt="Adolf Hitler" />
+        <h2>Adolf Hitler</h2>
+        <p><strong>Political View:</strong> Fascism</p>
+        <p><strong>Position:</strong> Führer of Nazi Germany</p>
+        <p>
+          Adolf Hitler's vision of a militarized, nationalist Germany brought
+          about WWII. His aggressive conquers and quest for racial purity
+          brought an insane amount of destruction and suffering across Europe.
+          Hitler's reign is known for it's aggressive warfare, the Holocaust,
+          and his attempt to spread fascism, which finally led to the demise of
+          Nazi Germany and himself.
+        </p>
+      </div>
+
+      <div class="leader" onclick="showPopup('popup5')">
+        <img
+          src="./img/images-ww2leaders/mussolini.png"
+          alt="Benito Mussolini"
+        />
+        <div class="tooltip">Benito Mussolini</div>
+      </div>
+      <div id="popup5" class="popup">
+        <button class="close" onclick="closePopup('popup5')">&times;</button>
+        <img
+          src="./img/images-ww2leaders/mussolini.png"
+          alt="Benito Mussolini"
+        />
+        <h2>Benito Mussolini</h2>
+        <p><strong>Political View:</strong> Fascism</p>
+        <p><strong>Position:</strong> Prime Minister of Italy</p>
+        <p>
+          Benito Mussolini was the founder of Italian Fascism. He basically
+          wanted to create a new Roman Empire.He made an alliance with Germany
+          in hopes that fascism would be the solution to economical and social
+          problems. His ambitions led to Italy's loss in WWII, and Mussolini's
+          dictatorship ended when he was captured and killed by partisan forces.
+        </p>
+      </div>
+
+      <div class="leader" onclick="showPopup('popup6')">
+        <img src="./img/images-ww2leaders/tojo.png" alt="Hideki Tojo" />
+        <div class="tooltip">Hideki Tojo</div>
+      </div>
+      <div id="popup6" class="popup">
+        <button class="close" onclick="closePopup('popup6')">&times;</button>
+        <img src="./img/images-ww2leaders/tojo.png" alt="Hideki Tojo" />
+        <h2>Hideki Tojo</h2>
+        <p><strong>Political View:</strong> Militarism</p>
+        <p><strong>Position:</strong> Prime Minister of Japan</p>
+        <p>
+          Hideki Tojo was the leader of Japan's imperial policies during World
+          War II. Under his rule, Japan had plans to to expand throughout Asia
+          and the Pacific, most notably by the attack on Pearl Harbor. Tojo
+          believed in the creation of a "Greater East Asia Co-Prosperity Sphere"
+          with Japan as the greatest military power within the planned area.
+          This mindset is what let to Japan's defeat and his execution for
+          committing war crimes.
+        </p>
+      </div>
+    </div>
+
+    <footer>
+      <p>OCdt M.T. Clement</p>
+      <p>L1035</p>
+      <p>ILOY (Slasher)</p>
+      <p>POE102-W2S0</p>
+      <p>
+        Email:
+        <a href="mailto:mason.clement@rmc-cmr.ca">mason.clement@rmc-cmr.ca</a>
+      </p>
+    </footer>
+  </body>
+</html>
