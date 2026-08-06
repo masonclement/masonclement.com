@@ -2,6 +2,26 @@
    Re-run `node scripts/build-certificates.js` after changing /Certificates. */
 window.CERTIFICATES = [
   {
+    "file": "Certificate - Elevated Work Platform.png",
+    "pdfFile": "Certificate - Elevated Work Platform.pdf",
+    "title": "Elevated Work Platform",
+    "type": "PNG Image",
+    "ext": ".png",
+    "date": "Aug 6, 2026",
+    "mtimeMs": 1786055776505,
+    "size": "6.6 MB"
+  },
+  {
+    "file": "Certificate - Working at Heights.png",
+    "pdfFile": "Certificate - Working at Heights.pdf",
+    "title": "Working at Heights",
+    "type": "PNG Image",
+    "ext": ".png",
+    "date": "Aug 6, 2026",
+    "mtimeMs": 1786054433472,
+    "size": "301 KB"
+  },
+  {
     "file": "Certificate - Construction Fundamentals.png",
     "pdfFile": "Certificate - Construction Fundamentals.pdf",
     "title": "Construction Fundamentals",
