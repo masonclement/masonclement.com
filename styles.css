@@ -577,12 +577,14 @@ button {
   }
   .hero-photo {
     order: 1;
+    margin-bottom: 10px;
   }
   .meta-row {
     justify-content: center;
   }
   .photo-shape {
     max-width: 260px;
+    overflow: hidden;
   }
 }
 
